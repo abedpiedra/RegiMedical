@@ -1,0 +1,83 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Arriba */
+    min-height: 100vh;
+    background: #f4f6fa;
+    margin: 0;
+    padding: 0vw 5vw 0 5vw; /* padding-top para separar del navbar */
+}
+
+h1 {
+    color: #7E370F;
+    margin-bottom: 0.5rem;
+}
+
+.area-chart-container {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.area-label-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 22px;
+    color: #3180a5;
+    pointer-events: none;
+    text-align: center;
+}
+
+.logo-home {
+    max-width: 200px;
+    margin: 1rem auto;
+    display: block;
+}
+
+.boton-Agregar {
+    background-color: #cc8240;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.boton-Agregar:hover {
+    background-color: #ad4d03;
+    transform: scale(1.05);
+}
+
+h5 {
+    font-size: 20px;
+    color: #C86B3E;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.chart-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(161, 0, 0, 0.08);
+    padding: 32px 28px;
+    min-width: 500px;   
+    min-height: 350px;  
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

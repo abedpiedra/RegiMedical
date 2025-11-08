@@ -1,0 +1,261 @@
+/* ==== HEADER GENERAL ==== */
+header {
+  display: flex;
+  flex-direction: column; /* Cambia a columna */
+  align-items: center;
+  padding: 10px 0 0 0;
+  background-color: #e8f0ff;
+}
+
+.header-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  width: auto;
+  gap: 8px;
+}
+
+.header-search input {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  width: 180px;
+  height: 32px;
+  outline: none;
+}
+
+.header-search button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #3180a5;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  border-left: none;
+}
+
+.header-search button:hover {
+  background: #47aae4;
+}
+
+/* ==== NAVEGACIÓN ==== */
+header > ul {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+header > ul > li {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+header > ul > li > a {
+  text-decoration: none;
+  color: #000000;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+/* 🔹 Hover solo para enlaces y botones clicables (NO el dropdown) */
+header > ul > li > a:hover,
+header > ul > li > button.boton-logout:hover,
+header > ul > li > button.boton-noti:hover {
+  background-color: #45859e;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+img {
+  width: 50px;
+  height: auto;
+  cursor: pointer;
+}
+
+/* ==== BOTÓN LOGOUT ==== */
+.boton-logout {
+  width: 70px;
+  height: 50px;
+  background-color: #3180a5;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  color: white;
+}
+
+.boton-logout:hover {
+  background-color: #3ea8b6;
+  transition: 0.3s ease;
+}
+
+/* ==== NOTIFICACIONES ==== */
+.noti-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.boton-noti {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+  margin-left: 10px;
+  color: #000;
+}
+
+.noti-badge {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  background: #e74c3c;
+  color: white;
+  font-size: 11px;
+  padding: 2px 4px;
+  border-radius: 50%;
+}
+
+/* 🔔 Dropdown */
+.noti-dropdown {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  width: 260px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  padding: 10px;
+}
+
+.noti-dropdown h4 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 3px;
+}
+
+.noti-item {
+  border-bottom: 1px solid #eee;
+  padding: 5px 0;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+/* 🔹 Hover solo dentro del dropdown, sutil */
+.noti-item:hover {
+  background: #f5f7fb;
+}
+
+.noti-item p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #333;
+}
+
+.noti-fecha {
+  display: block;
+  font-size: 11px;
+  color: #777;
+}
+
+.noti-vacio {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+}
+
+.ver-todo {
+  width: 100%;
+  border: none;
+  background: #3180a5;
+  color: white;
+  border-radius: 6px;
+  padding: 5px;
+  margin-top: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.ver-todo:hover {
+  background: #256882;
+}
+
+
+/* Dropdown de búsqueda */
+.header-search { position: relative; } /* importante */
+
+.search-suggest {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 420px;
+  max-height: 60vh;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(2,13,37,0.16);
+  padding: 8px 8px 6px 8px;
+  z-index: 200;
+}
+
+.search-section {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  padding: 6px 4px 2px 4px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.search-suggest ul {
+  list-style: none;
+  margin: 4px 0 8px 0;
+  padding: 0;
+}
+
+.search-suggest li {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.search-suggest li:hover {
+  background: #f1f5f9;
+}
+
+.search-see-all {
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: #3180a5;
+  color: #fff;
+  cursor: pointer;
+}
+
+.search-see-all:hover {
+  background: #256882;
+}

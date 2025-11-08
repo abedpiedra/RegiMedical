@@ -1,0 +1,103 @@
+/* === CONTENEDOR GENERAL === */
+.container {
+  margin-top: 0;
+  padding-top: 10px;
+  background-color: #fffdf9; /* tono suave similar al resto */
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tituloPrincipal {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #3180a5;
+  margin-bottom: 20px;
+}
+
+/* === PANEL IZQUIERDO === */
+.panelIzquierdo {
+  background-color: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.card {
+  width: 100%;
+}
+
+/* === TABLAS (usa table-interior global, solo ajusta detalles) === */
+.table-interior th {
+  background-color: #f9f0e2 !important; /* igual que global */
+  color: #000000;
+  font-weight: 600;
+}
+
+.table-interior td {
+  color: #333333;
+}
+
+/* === SUBTÍTULOS === */
+.subtitulo {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  color: #000000; /* café del tema global */
+  border-bottom: 2px solid #f9f0e2;
+  padding-bottom: 4px;
+}
+
+/* === LINK ARCHIVO === */
+.linkArchivo {
+  color: #3180a5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.linkArchivo:hover {
+  color: #66b0b9;
+}
+
+/* === MENSAJE Y ALERTAS === */
+.mensaje {
+  text-align: center;
+  font-size: 20px;
+  color: #000000;
+  margin-top: 25px;
+}
+
+.alerta {
+  background-color: #ffe5e5;
+  color: #b20000;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* === TEXTO SIN PARÁMETROS === */
+.noParametros {
+  font-style: italic;
+  color: #777;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .container {
+    padding: 15px;
+  }
+
+  .panelIzquierdo {
+    padding: 15px;
+  }
+
+  .tituloPrincipal {
+    font-size: 22px;
+  }
+}

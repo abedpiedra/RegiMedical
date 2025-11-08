@@ -1,0 +1,137 @@
+/* ======= ENCABEZADO / BOTONERA ======= */
+.botonera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+}
+
+.botonera h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #000000;
+  text-align: center;
+  margin: 0;
+}
+
+/* ======= DETALLE NOTIFICACIÓN ======= */
+.detalleNoti {
+  background-color: #f7faff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  margin: 40px auto;
+  font-size: 16px;
+}
+
+.detalleNoti p {
+  margin-bottom: 12px;
+}
+
+.detalleNoti strong {
+  font-weight: 600;
+}
+
+/* ======= ESTADOS (LEÍDA / NO LEÍDA) ======= */
+.leida {
+  background-color: #ffffff;
+  color: #555;
+}
+
+.noLeida {
+  background-color: #e7f0ff;
+  font-weight: 600;
+}
+
+/* ======= BOTONES / ENLACES ======= */
+.mensajeLink {
+  color: #3180a5; /* azul principal */
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.mensajeLink:hover {
+  color: #ad4d03; /* hover color */
+}
+
+.btnGroup {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* ======= ERRORES / MENSAJES VACÍOS ======= */
+.vacio {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #333;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* ======= PAGINACIÓN ======= */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.pagination button {
+  background-color: #3180a5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 35px;
+  height: 35px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #ad4d03;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: 500;
+  color: #000000;
+}
+
+/* ======= RESPONSIVE ======= */
+@media (max-width: 768px) {
+  .botonera h1 {
+    font-size: 1.2rem;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .detalleNoti {
+    padding: 18px;
+  }
+
+  .detalleNoti p {
+    font-size: 14px;
+  }
+}

@@ -13,12 +13,33 @@ function DetalleEquipos() {
   const [mantenimientos, setMantenimientos] = useState([]);
   const [error, setError] = useState("");
 
-  // Normaliza a URL absoluta servida por el API
-  const toApiUrl = (src) => {
+  // ===== Helpers de rutas públicas/estáticas =====
+  const isAbs = (s) =>
+    /^https?:\/\//i.test(s) || /^data:/i.test(s) || /^blob:/i.test(s);
+
+  // BASE_URL de Vite (por si usas basename en prod)
+  const PUBLIC_BASE = (import.meta?.env?.BASE_URL || "/").replace(/\/+$/, "");
+
+  // Mapea a URL pública servida desde client/public
+  const toPublicUrl = (p) => {
+    if (!p) return null;
+    const clean = String(p).replace(/^\/+/, ""); // quita "/" iniciales
+    return `${PUBLIC_BASE}/${clean}`.replace(/\/{2,}/g, "/");
+  };
+
+  // Normaliza cualquier origen a URL final de imagen
+  const toImgUrl = (src) => {
     if (!src) return null;
-    if (/^https?:\/\//i.test(src)) return src;
-    const clean = src.startsWith("/") ? src : `/${src}`;
-    return `${API_BASE}${clean}`;
+    if (isAbs(src)) return src;
+
+    // Quita "/" iniciales para poder chequear prefijos
+    const s = String(src).replace(/^\/+/, "");
+
+    // Si ya apunta al folder público
+    if (s.startsWith("Equipos_Fotos/")) return toPublicUrl(s);
+
+    // Si es solo un nombre o subcarpeta (relativo), lo mapeamos a public/Equipos_Fotos
+    return toPublicUrl(`Equipos_Fotos/${s}`);
   };
 
   // Obtiene posibles fuentes de imagen desde distintos campos del equipo
@@ -26,20 +47,28 @@ function DetalleEquipos() {
     if (!e) return [];
     const raw = [];
 
-    if (e.foto_path) raw.push(e.foto_path);
-    if (e.imagen) raw.push(`/Equipos_Fotos/${e.imagen}`);
-    if (e.foto) raw.push(`/Equipos_Fotos/${e.foto}`);
-    if (e.imagen_url) raw.push(e.imagen_url);
+    // URLs completas o rutas absolutas
+    if (e.foto_path) raw.push(String(e.foto_path));
+    if (e.imagen_url) raw.push(String(e.imagen_url));
+
+    // Campos que suelen venir como nombres/relativas
+    if (e.imagen) raw.push(String(e.imagen));
+    if (e.foto) raw.push(String(e.foto));
 
     if (Array.isArray(e.imagenes)) {
       e.imagenes.forEach((it) => {
         if (!it) return;
-        raw.push(/^https?:\/\//i.test(String(it)) ? it : `/Equipos_Fotos/${it}`);
+        raw.push(String(it));
       });
     }
 
-    const unique = Array.from(new Set(raw.filter(Boolean)));
-    return unique.map(toApiUrl).filter(Boolean);
+    // Normaliza, filtra y quita duplicados
+    const urls = raw
+      .filter(Boolean)
+      .map(toImgUrl)
+      .filter(Boolean);
+
+    return Array.from(new Set(urls));
   };
 
   useEffect(() => {
@@ -57,6 +86,9 @@ function DetalleEquipos() {
           if (mantRes.ok) {
             const mantData = await mantRes.json();
             setMantenimientos(mantData);
+          } else {
+            // Si no hay mantenciones o 404, lo dejamos como []
+            setMantenimientos([]);
           }
         }
       } catch (err) {
@@ -79,6 +111,7 @@ function DetalleEquipos() {
   if (!equipo) return <p className={styles.mensaje}>Cargando información...</p>;
 
   const imagenes = getImageSources(equipo);
+  const FALLBACK_IMG = toPublicUrl("Equipos_Fotos/_placeholder.png"); // crea este archivo en public
 
   return (
     <div className={`container-a ${styles.container}`}>
@@ -86,14 +119,30 @@ function DetalleEquipos() {
       <div className={styles.panelIzquierdo}>
         <h3 className={styles.titulo}>Detalles del Equipo</h3>
         <div className={styles.card}>
-          <p><strong>Serie:</strong> {equipo.serie}</p>
-          <p><strong>Modelo:</strong> {equipo.modelo}</p>
-          <p><strong>Marca:</strong> {equipo.marca}</p>
-          <p><strong>Área:</strong> {equipo.area}</p>
-          <p><strong>Estado:</strong> {equipo.estado}</p>
-          <p><strong>Proveedor:</strong> {equipo.proveedor}</p>
-          <p><strong>Última Mantención:</strong> {equipo.umantencion || "-"}</p>
-          <p><strong>Próxima Mantención:</strong> {equipo.pmantencion || "-"}</p>
+          <p>
+            <strong>Serie:</strong> {equipo.serie}
+          </p>
+          <p>
+            <strong>Modelo:</strong> {equipo.modelo}
+          </p>
+          <p>
+            <strong>Marca:</strong> {equipo.marca}
+          </p>
+          <p>
+            <strong>Área:</strong> {equipo.area}
+          </p>
+          <p>
+            <strong>Estado:</strong> {equipo.estado}
+          </p>
+          <p>
+            <strong>Proveedor:</strong> {equipo.proveedor}
+          </p>
+          <p>
+            <strong>Última Mantención:</strong> {equipo.umantencion || "-"}
+          </p>
+          <p>
+            <strong>Próxima Mantención:</strong> {equipo.pmantencion || "-"}
+          </p>
 
           <h5 className={styles.subtitulo}>Atributos Técnicos</h5>
           {equipo.atributos_tecnicos &&
@@ -120,7 +169,11 @@ function DetalleEquipos() {
                   alt={`Equipo ${equipo.serie} - ${i + 1}`}
                   className={styles.foto}
                   loading="lazy"
-                  onError={(e) => (e.currentTarget.style.display = "none")}
+                  onError={(e) => {
+                    // Evita loops si también falla el placeholder
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = FALLBACK_IMG;
+                  }}
                 />
               ))}
             </div>

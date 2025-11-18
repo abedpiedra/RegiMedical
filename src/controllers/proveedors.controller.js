@@ -12,7 +12,7 @@ export const proveedor = async (req, res) => {
     if (proveedorFound)
       return res.status(400).json(["El Proveedor ya está registrado"]);
 
-    // Crea el nuevo proveedor
+    // Crea el nuevo proveedora
     const newProveedor = new Proveedor({
       nombre_empresa,
       direccion,

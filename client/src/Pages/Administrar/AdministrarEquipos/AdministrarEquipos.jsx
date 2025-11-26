@@ -278,6 +278,7 @@ const AdministrarEquipos = () => {
         return;
       }
 
+      // Filtrar filas válidas
       const filasValidas = jsonData
         .slice(1)
         .filter(
@@ -292,6 +293,7 @@ const AdministrarEquipos = () => {
             )
         );
 
+      // Mapeo de las filas para obtener los equipos
       const nuevosEquipos = filasValidas.map((fila, i) => {
         const serie = fila[0] ? String(fila[0]).trim() : `SIN_SERIE_${i + 1}`;
         const modelo = fila[1] ? String(fila[1]).trim() : "Desconocido";
@@ -305,6 +307,13 @@ const AdministrarEquipos = () => {
         const proveedor = fila[7]
           ? String(fila[7]).trim()
           : "Importado desde Excel";
+
+        // Aquí estamos asignando los atributos técnicos (columna variable)
+        const atributosTecnicos = {};
+        fila.slice(8).forEach((val, index) => {
+          atributosTecnicos[`Atributo${index + 1}`] = val || ""; // Asignar valor vacío si no hay datos
+        });
+
         return {
           serie,
           modelo,
@@ -314,6 +323,7 @@ const AdministrarEquipos = () => {
           umantencion,
           pmantencion,
           proveedor,
+          atributos_tecnicos: atributosTecnicos, // Asegúrate de que esto sea el formato correcto para tu base de datos
         };
       });
 

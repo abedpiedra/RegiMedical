@@ -22,13 +22,24 @@ function EditarEquipo() {
     setValue,
   } = useForm();
 
-  // 🔹 Función para formatear fecha a "YYYY-MM-DD"
+  // 🔹 Función para formatear fecha a "DD-MM-YY"
   const formatearFecha = (fecha) => {
     if (!fecha) return ""; // si viene null, undefined o vacío
     const d = new Date(fecha);
     if (isNaN(d.getTime())) return ""; // si no es una fecha válida
-    return d.toISOString().split("T")[0];
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yy = String(d.getFullYear()).slice(-2); // Solo los últimos dos dígitos del año
+    return `${dd}-${mm}-${yy}`;
   };
+
+  // 🔹 Función para convertir el formato "DD-MM-YY" a "YYYY-MM-DD" para el backend
+  const convertirFechaParaBackend = (fecha) => {
+    if (!fecha) return "";
+    const [dd, mm, yy] = fecha.split("-");
+    return `20${yy}-${mm}-${dd}`; // Asume que el año es del tipo 20YY
+  };
+
   // Cargar datos del equipo
   useEffect(() => {
     const cargarDatos = async () => {
@@ -41,7 +52,17 @@ function EditarEquipo() {
         Object.keys(equipo).forEach((key) => {
           if (equipo[key] !== undefined) {
             if (key === "umantencion" || key === "pmantencion") {
-              setValue(key, formatearFecha(equipo[key]));
+              // Verificamos si la fecha es válida y la formateamos correctamente
+              const fecha = formatearFecha(equipo[key]);
+              setValue(key, fecha || ""); // Si la fecha no es válida, dejamos un valor vacío
+            } else if (key === "estado") {
+              setValue(key, equipo[key] || "activo"); // Asignar valor por defecto si está vacío
+            } else if (key === "atributos_tecnicos") {
+              // Aquí tratamos los atributos técnicos
+              const atributos = equipo[key] || {}; // Asegurarnos de que no sea nulo
+              Object.keys(atributos).forEach((atributo) => {
+                setValue(`atributos_tecnicos.${atributo}`, atributos[atributo]);
+              });
             } else {
               setValue(key, equipo[key]);
             }
@@ -69,16 +90,20 @@ function EditarEquipo() {
   }, []);
 
   // Guardar cambios
-
   const onSubmit = async (values) => {
     try {
-      await axios.put(`http://localhost:4000/api/equipos/${id}`, values);
+      // Convertir fechas a formato "YYYY-MM-DD" antes de enviarlas al backend
+      const valoresConvertidos = {
+        ...values,
+        umantencion: convertirFechaParaBackend(values.umantencion),
+        pmantencion: convertirFechaParaBackend(values.pmantencion),
+      };
+
+      await axios.put(`http://localhost:4000/api/equipos/${id}`, valoresConvertidos);
       toast.success("Equipo actualizado correctamente");
 
       await axios.post("http://localhost:4000/api/notificaciones", {
-        mensaje: `🛠️ El equipo "${values.marca} ${values.modelo}" (serie ${
-          values.serie
-        }) fue modificado el ${new Date().toLocaleDateString("es-CL")}.`,
+        mensaje: `🛠️ El equipo "${values.marca} ${values.modelo}" (serie ${values.serie}) fue modificado el ${new Date().toLocaleDateString("es-CL")}.`,
         rutaDestino: `/equipos/${id}`,
         tipo: "general", // opcional
         alertKey: `edit:${id}:${Date.now()}`, // opcional (si no quieres dedupe aquí)
@@ -220,6 +245,23 @@ function EditarEquipo() {
             )}
           </div>
         </div>
+
+        {/* === Atributos Técnicos (si existen) === */}
+        {equipoData?.atributos_tecnicos &&
+          Object.keys(equipoData.atributos_tecnicos).map((atributo, index) => (
+            <div key={index} className={styles.formRow}>
+              <div className={styles.formField}>
+                <label htmlFor={`atributos_tecnicos.${atributo}`}>
+                  {atributo.charAt(0).toUpperCase() + atributo.slice(1)}
+                </label>
+                <input
+                  id={`atributos_tecnicos.${atributo}`}
+                  type="text"
+                  {...register(`atributos_tecnicos.${atributo}`)}
+                />
+              </div>
+            </div>
+          ))}
 
         {/* === Botones === */}
         <div className={styles.buttonGroup}>

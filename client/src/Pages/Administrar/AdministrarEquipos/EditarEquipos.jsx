@@ -163,6 +163,7 @@ function EditarEquipo() {
               <option value="">Selecciona un estado</option>
               <option value="activo">Activo</option>
               <option value="inactivo">Inactivo</option>
+              <option value="en reparacion">en reparacion</option>
             </select>
             {errors.estado && (
               <p className="text-danger">{errors.estado.message}</p>

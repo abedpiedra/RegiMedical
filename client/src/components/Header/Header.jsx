@@ -20,7 +20,11 @@ const Header = () => {
   // === BUSCADOR ===
   const [search, setSearch] = useState("");
   const debouncedQ = useDebounce(search, 300);
-  const [sug, setSug] = useState({ equipos: [], proveedores: [], mantenimientos: [] });
+  const [sug, setSug] = useState({
+    equipos: [],
+    proveedores: [],
+    mantenimientos: [],
+  });
   const [showSug, setShowSug] = useState(false);
   const sugRef = useRef(null);
 
@@ -33,7 +37,9 @@ const Header = () => {
   // === CARGAR NOTIFICACIONES ===
   const cargarNotificaciones = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/notificaciones/todas");
+      const res = await axios.get(
+        "http://localhost:4000/api/notificaciones/todas"
+      );
       const data = Array.isArray(res.data) ? res.data : [];
       setNotificaciones(data.slice(0, 5));
       setNuevas(data.filter((n) => !n.leida).length);
@@ -45,24 +51,26 @@ const Header = () => {
   // === MARCAR UNA NOTIFICACIÓN COMO LEÍDA ===
   const marcarLeida = async (id) => {
     try {
-      await axios.put(`http://localhost:4000/api/notificaciones/${id}/leida`, {
-        leida: true,
-      });
+      await axios.put(
+        `http://localhost:4000/api/notificaciones/${id}/leida`,
+        {
+          leida: true,
+        }
+      );
     } catch (error) {
       console.error("Error al marcar como leída:", error);
     }
   };
 
-  // === CLICK EN UNA NOTIFICACIÓN ===
+  // === CLICK EN UNA NOTIFICACIÓN (SIEMPRE VA AL DETALLE DE LA NOTI) ===
   const handleClickNoti = async (n) => {
     try {
       await marcarLeida(n._id);
       await cargarNotificaciones();
-      if (n.rutaDestino && typeof n.rutaDestino === "string") {
-        navigate(n.rutaDestino);
-      } else {
-        navigate(`/notificacion/${n._id}`);
-      }
+
+      // Navegar SIEMPRE al detalle de la notificación
+      navigate(`/notificacion/${n._id}`);
+
       setMostrarNoti(false);
     } catch (e) {
       console.error(e);
@@ -79,8 +87,10 @@ const Header = () => {
   // === CERRAR DROPDOWNS (noti + buscador) AL HACER CLICK FUERA ===
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (notiRef.current && !notiRef.current.contains(e.target)) setMostrarNoti(false);
-      if (sugRef.current && !sugRef.current.contains(e.target)) setShowSug(false);
+      if (notiRef.current && !notiRef.current.contains(e.target))
+        setMostrarNoti(false);
+      if (sugRef.current && !sugRef.current.contains(e.target))
+        setShowSug(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -113,9 +123,12 @@ const Header = () => {
         return;
       }
       try {
-        const { data } = await axios.get("http://localhost:4000/api/search", {
-          params: { q, limit: 5 },
-        });
+        const { data } = await axios.get(
+          "http://localhost:4000/api/search",
+          {
+            params: { q, limit: 5 },
+          }
+        );
         setSug(data || { equipos: [], proveedores: [], mantenimientos: [] });
         setShowSug(true);
       } catch (e) {
@@ -138,7 +151,8 @@ const Header = () => {
   const goToItem = (type, item) => {
     if (type === "equipos") navigate(`/equipos/${item._id}`);
     else if (type === "proveedores") navigate(`/proveedores/${item._id}`);
-    else if (type === "mantenimientos") navigate(`/mantenimientos/${item._id}`);
+    else if (type === "mantenimientos")
+      navigate(`/mantenimientos/${item._id}`);
     setShowSug(false);
   };
 
@@ -146,16 +160,15 @@ const Header = () => {
     <header>
       {/* === BUSCADOR === */}
       <div className={styles["header-search"]} ref={sugRef}>
-        <form
-          onSubmit={handleSearch}
-          style={{ display: "flex", gap: 8 }}
-        >
+        <form onSubmit={handleSearch} style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
             placeholder="Buscar equipos, proveedores, mantenimientos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onFocus={() => debouncedQ.trim().length >= 2 && setShowSug(true)}
+            onFocus={() =>
+              debouncedQ.trim().length >= 2 && setShowSug(true)
+            }
           />
           <button type="submit" title="Buscar">
             🔍
@@ -186,7 +199,10 @@ const Header = () => {
                   <div className={styles["search-section"]}>Proveedores</div>
                   <ul>
                     {sug.proveedores.map((p) => (
-                      <li key={p._id} onClick={() => goToItem("proveedores", p)}>
+                      <li
+                        key={p._id}
+                        onClick={() => goToItem("proveedores", p)}
+                      >
                         <b>{p.nombre_empresa}</b> — {p.rut || "sin RUT"}
                       </li>
                     ))}
@@ -196,10 +212,15 @@ const Header = () => {
 
               {sug.mantenimientos.length > 0 && (
                 <>
-                  <div className={styles["search-section"]}>Mantenimientos</div>
+                  <div className={styles["search-section"]}>
+                    Mantenimientos
+                  </div>
                   <ul>
                     {sug.mantenimientos.map((m) => (
-                      <li key={m._id} onClick={() => goToItem("mantenimientos", m)}>
+                      <li
+                        key={m._id}
+                        onClick={() => goToItem("mantenimientos", m)}
+                      >
                         <b>{m.serie}</b> — {m.tipo} —{" "}
                         {new Date(m.fecha).toLocaleDateString("es-CL")}
                       </li>
@@ -212,7 +233,11 @@ const Header = () => {
                 className={styles["search-see-all"]}
                 onClick={() => {
                   setShowSug(false);
-                  navigate(`/ResultadosBusqueda?q=${encodeURIComponent(search.trim())}`);
+                  navigate(
+                    `/ResultadosBusqueda?q=${encodeURIComponent(
+                      search.trim()
+                    )}`
+                  );
                 }}
               >
                 Ver todos los resultados
@@ -249,24 +274,33 @@ const Header = () => {
             aria-expanded={mostrarNoti}
           >
             🔔
-            {nuevas > 0 && <span className={styles["noti-badge"]}>{nuevas}</span>}
+            {nuevas > 0 && (
+              <span className={styles["noti-badge"]}>{nuevas}</span>
+            )}
           </button>
 
           {mostrarNoti && (
             <div className={styles["noti-dropdown"]} role="menu">
               <h4>Notificaciones</h4>
               {notificaciones.length === 0 ? (
-                <p className={styles["noti-vacio"]}>No hay notificaciones</p>
+                <p className={styles["noti-vacio"]}>
+                  No hay notificaciones
+                </p>
               ) : (
                 <ul>
                   {notificaciones.map((n) => (
                     <li
                       key={n._id}
                       className={styles["noti-item"]}
-                      onClick={() => handleClickNoti(n)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClickNoti(n);
+                      }}
                       role="menuitem"
                       tabIndex={0}
-                      onKeyDown={(e) => e.key === "Enter" && handleClickNoti(n)}
+                      onKeyDown={(e) =>
+                        e.key === "Enter" && handleClickNoti(n)
+                      }
                       style={{
                         cursor: "pointer",
                         background: n.leida ? "transparent" : "#eef6ff",
@@ -303,7 +337,10 @@ const Header = () => {
         </li>
 
         {/* === BOTÓN LOGOUT === */}
-        <button onClick={handleLogout} className={styles["boton-logout"]}>
+        <button
+          onClick={handleLogout}
+          className={styles["boton-logout"]}
+        >
           Logout
         </button>
       </ul>
